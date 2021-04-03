@@ -1,0 +1,15 @@
+{
+  "name": "syzygy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "serve": "node dev-server.js"
+  },
+  "keywords": [],
+  "author": "Michael Farquhar <michaelfarquhar1991@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "express": "^4.17.1"
+  }
+}
