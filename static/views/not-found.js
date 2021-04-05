@@ -6,7 +6,7 @@ const viewContent = html`
 `
 
 export default class CharactersView extends AbstractView {
-    async mount () {
-        this.rootEl.appendChild(viewContent.cloneNode(true))
-    }
+	async mount () {
+		this.rootEl.appendChild(viewContent.cloneNode(true))
+	}
 }
