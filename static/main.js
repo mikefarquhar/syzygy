@@ -2,8 +2,8 @@
 const rootElement = document.querySelector('[data-js=router-root]')
 
 const routeDefs = [
-    { path: '/',              view: './views/characters.js' },
-    { path: '/character/:id', view: './views/character.js' },
+	{ path: '/',              view: './views/characters.js' },
+	{ path: '/character/:id', view: './views/character.js' },
 ]
 
 const fallbackView = './views/not-found.js'
@@ -11,14 +11,14 @@ const fallbackView = './views/not-found.js'
 // ROUTER ==========================================================================================
 const routes = routeDefs.map(({ path, view }) => {
 	const matchStr = path
-			.replace(/\//g, '\\/')
-			.replace(/:\w+/g, '(.+)')
+		.replace(/\//g, '\\/')
+		.replace(/:\w+/g, '(.+)')
 
 	const matchExp = new RegExp(`^${matchStr}$`)
 
 	const paramKeys = path.match(matchExp)
-			.slice(1)
-			.map(key => key.slice(1))
+		.slice(1)
+		.map(key => key.slice(1))
 
 	return { path, view, matchExp, paramKeys }
 })
@@ -35,71 +35,83 @@ let activeParams = []
 let activeView = { unmount () {} }
 
 export async function updateRouting () {
-    const currentUrl = getCurrentUrl()
+	const currentUrl = getCurrentUrl()
 
-    let nextRoute = fallbackRoute
-    let match = []
+	let nextRoute = fallbackRoute
+	let match = []
 
-    for (const potentialRoute of routes) {
-        const potentialMatch = currentUrl.match(potentialRoute.matchExp)
+	for (const potentialRoute of routes) {
+		const potentialMatch = currentUrl.match(potentialRoute.matchExp)
 
-        if (potentialMatch) {
-            nextRoute = potentialRoute
-            match = potentialMatch.slice(1)
-            break
-        }
-    }
+		if (potentialMatch) {
+			nextRoute = potentialRoute
+			match = potentialMatch.slice(1)
+			break
+		}
+	}
 
-    const nextParams = {}
-    for (let i = 0; i < match.length; ++i) {
-        const key = nextRoute.paramKeys[i]
-        const value = match[i]
-        nextParams[key] = value
-    }
+	const nextParams = {}
+	for (let i = 0; i < match.length; ++i) {
+		const key = nextRoute.paramKeys[i]
+		const value = match[i]
+		nextParams[key] = value
+	}
 
-    if (activeRoute !== nextRoute || !paramsAreEqual(activeParams, nextParams)) {
-        const { default: View } = await import(nextRoute.view)
-        const nextView = new View(rootElement, nextParams)
+	if (activeRoute !== nextRoute || !paramsAreEqual(activeParams, nextParams)) {
+		const { default: View } = await import(nextRoute.view)
+		const nextView = new View(rootElement, nextParams)
 
-        activeView.unmount()
+		activeView.unmount()
 
-        activeRoute = nextRoute
-        activeParams = nextParams
-        activeView = nextView
+		activeRoute = nextRoute
+		activeParams = nextParams
+		activeView = nextView
 
-        await nextView.mount()
-    }
+		updateActiveLinks(currentUrl)
+		await nextView.mount()
+	}
 }
 
 export function pushRoute (url) {
-    window.history.pushState(null, document.title, `#${url}`)
-    updateRouting()
+	window.history.pushState(null, document.title, `#${url}`)
+	updateRouting()
 }
 
 function getCurrentUrl() {
-    return window.location.hash.slice(1) || '/'
+	return window.location.hash.slice(1) || '/'
 }
 
 function paramsAreEqual (currentParams, nextParams) {
-    for (const key of Object.keys(currentParams)) {
-        if (currentParams[key] !== nextParams[key]) {
-            return false
-        }
-    }
-    return true
+	for (const key of Object.keys(currentParams)) {
+		if (currentParams[key] !== nextParams[key]) {
+			return false
+		}
+	}
+	return true
 }
 
-// INIT ============================================================================================
+function updateActiveLinks (url) {
+	document.querySelectorAll('[data-link]').forEach(link => {
+		if (link.getAttribute('href') === url) {
+			link.classList.add('active')
+		}
+		else {
+			link.classList.remove('active')
+		}
+	})
+}
+
+// INIT ROUTING ====================================================================================
 window.addEventListener('popstate', updateRouting)
 
 document.addEventListener('click', evt => {
 	if (evt.target.matches('[data-link]')) {
-			evt.preventDefault()
+		evt.preventDefault()
 
-			const href = evt.target.getAttribute('href')
-			if (getCurrentUrl() !== href) {
-					pushRoute(href)
-			}
+		const href = evt.target.getAttribute('href')
+		if (getCurrentUrl() !== href) {
+			pushRoute(href)
+		}
 	}
 })
 
@@ -108,3 +120,26 @@ if (window.location.hash === '') {
 }
 
 updateRouting()
+
+// NAVBAR ==========================================================================================
+const navToggle = document.querySelector('[data-js="page-nav-toggle"]')
+const navToggleLabel = document.querySelector('[data-js="page-nav-toggle-label"]')
+
+navToggleLabel.addEventListener('keydown', (evt) => {
+	if (evt.code === 'Enter' || evt.code === 'Space') {
+		const checkbox = navToggle
+		checkbox.checked = !checkbox.checked
+	}
+})
+
+document.addEventListener('click', (evt) => {
+	if (
+		navToggle.checked &&
+		evt.target !== navToggle &&
+		evt.target !== navToggleLabel
+	) {
+		evt.preventDefault()
+		evt.stopPropagation()
+		navToggle.checked = false
+	}
+})

@@ -9,12 +9,35 @@
 		<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav style="display: flex; flex-direction: column;">
-        <a href="/" data-link>Characters</a>
-        <a href="/character/3" data-link>Character</a>
-        <a href="/cheese" data-link>Cheese?</a>
-    </nav>
-    <div data-js="router-root"></div>
+		<header class="page-header">
+			<span class="page-header__brand">SYZYGY</span>
+
+			<input
+				type="checkbox"
+				id="page-header__nav-toggle"
+				class="page-header__nav-toggle"
+				data-js="page-nav-toggle"
+			/>
+			<label
+				class="page-header__nav-toggle-label"
+				for="page-header__nav-toggle"
+				tabindex="0"
+				data-js="page-nav-toggle-label"
+				role="button"
+				aria-label="Menu"
+			>
+				<span class="page_header__hamburger"></span>
+			</label>
+
+			<nav class="page-header__nav">
+				<a href="/" data-link>Characters</a>
+				<a href="/character/3" data-link>Character</a>
+				<a href="/cheese" data-link>Cheese?</a>
+			</nav>
+		</header>
+
+    <main class="view-body" data-js="router-root"></main>
+
     <script src="./static/main.js" type="module"></script>
 </body>
 </html>
