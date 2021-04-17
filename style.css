@@ -1,19 +1,21 @@
+/* THEMING ====================================================================================== */
 :root {
-	--color-primary: #0c0c0c;
+	--color-primary: #111111;
 	--color-on-primary: #f8f8f8;
 
-	--color-secondary: #2f2f2f;
+	--color-secondary: #4b4b4b;
 	--color-on-secondary: #f8f8f8;
 
 	--color-background: #e6e6e6;
-	--color-on-background: #0c0c0c;
+	--color-on-background: #111111;
 
 	--color-surface: #f8f8f8;
-	--color-on-surface: #0c0c0c;
+	--color-on-surface: #111111;
 
-	--color-highlight: #ea61dd;
+	--color-highlight: #c400d6;
 }
 
+/* GLOBAL STYLES ================================================================================ */
 body {
 	margin: 0;
 	height: 100vh;
@@ -41,7 +43,44 @@ body {
 	box-sizing: border-box;
 }
 
-/* HEADER */
+button {
+	font-size: 1rem;
+	letter-spacing: 1px;
+	padding: 0.75rem 1rem;
+	color: var(--color-on-primary);
+	background-color: var(--color-primary);
+	border: 2px solid var(--color-primary);
+	cursor: pointer;
+	text-transform: uppercase;
+}
+
+button:hover {
+	color: var(--color-on-secondary);
+	background-color: var(--color-secondary);
+	border: 2px solid var(--color-secondary);
+}
+
+button:active {
+	color: var(--color-primary);
+	background-color: transparent;
+}
+
+button:focus {
+	outline-style: solid;
+	outline-width: 2px;
+	outline-color: var(--color-highlight);
+	outline-offset: 1px;
+}
+
+button:focus:not(:focus-visible) {
+	outline-style: unset;
+}
+
+button:focus-visible {
+	outline-style: solid;
+}
+
+/* HEADER ======================================================================================= */
 .page-header {
 	flex-shrink: 0;
 	height: 3.75rem;
@@ -50,11 +89,14 @@ body {
 	align-items: center;
 	background-color: var(--color-primary);
 	color: var(--color-on-primary);
+	box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.3);
 }
 
 .page-header__brand {
 	font-size: 1.5rem;
 	margin-left: 1rem;
+	text-decoration: none;
+	color: inherit;
 }
 
 .page-header__nav-toggle {
@@ -138,7 +180,7 @@ body {
 	transition: opacity 0.2s ease-in-out 0.15s;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 640px) {
 	.page-header__nav-toggle-label {
 		display: none;
 	}
@@ -169,9 +211,177 @@ body {
 	}
 }
 
-/* VIEW BODY */
+/* VIEW BODY ==================================================================================== */
 .view-body {
 	flex-grow: 1;
 	overflow: auto;
 	padding: 0 1rem;
 }
+
+/* CHARACTERS VIEW ============================================================================== */
+.characters {
+	max-width: 900px;
+	margin: 0 auto;
+}
+
+.characters__header {
+	border-bottom: 2px solid var(--color-on-surface);
+	margin-bottom: -2px;
+}
+
+.characters__section--new {
+	text-align: right;
+	padding-bottom: 1rem;
+}
+
+.characters-empty-message {
+	display: none;
+}
+
+.characters-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.characters-list__item {
+	margin: 1rem 0;
+	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+}
+
+.characters-list__item:hover, .characters-list__item:focus {
+	box-shadow:
+		0 2px 12px 0 rgba(0, 0, 0, 0.3),
+		0 0 0px 2px var(--color-highlight);
+}
+
+.characters-list__item > a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.character-card {
+	display: flex;
+	background-color: var(--color-surface);
+	height: 180px;
+}
+
+.character-card__portrait {
+	display: none;
+	flex-shrink: 0;
+	height: 180px;
+	width: 180px;
+}
+
+.character-card__portrait:not([src]) {
+	visibility: hidden;
+}
+
+.character-card__info {
+	flex-grow: 1;
+	display: grid;
+	grid-template-columns: 1fr 1fr 5rem;
+	grid-template-rows: 3fr 2fr 1fr;
+	grid-template-areas:
+		"name name name"
+		"class class class"
+		"origin origin level";
+}
+
+.character-card__info > span {
+	display: flex;
+	align-items: center;
+	padding: 0.5rem 1rem;
+	text-decoration: none;
+	text-transform: capitalize;
+}
+
+.character-card__name {
+	grid-area: name;
+	background-color: var(--color-primary);
+	color: var(--color-on-primary);
+	font-size: 1.25rem;
+	font-weight: bold;
+}
+
+.character-card__class {
+	grid-area: class;
+	font-weight: bold;
+}
+
+.character-card__origin {
+	grid-area: origin;
+	background-color: var(--color-secondary);
+	color: var(--color-on-secondary);
+}
+
+.character-card__info .character-card__archetype {
+	display: none;
+	grid-area: archetype;
+	background-color: var(--color-secondary);
+	color: var(--color-on-secondary);
+}
+
+.character-card__level {
+	grid-area: level;
+	background-color: var(--color-secondary);
+	color: var(--color-on-secondary);
+}
+
+@media (min-width: 640px) {
+	.character-card__info {
+		grid-template-areas:
+		"name name name"
+		"class class class"
+		"origin archetype level";
+	}
+
+	.character-card__portrait {
+		display: block;
+	}
+
+	.character-card__info .character-card__archetype {
+		display: flex;
+	}
+}
+
+/* .character-card {
+	display: grid;
+	grid-template-columns: 128px 1fr 1fr 5rem;
+	grid-template-rows: 2fr 1fr 1fr;
+	grid-template-areas:
+		"portrait name name name"
+		"portrait class class class"
+		"portrait origin archetype level";
+	background-color: var(--color-surface);
+}
+
+.character-card__portrait {
+	grid-area: portrait;
+	background-color: var(--color-primary);
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.character-card__name {
+	grid-area: name;
+	background-color: var(--color-primary);
+	color: var(--color-on-primary);
+}
+
+.character-card__class {
+	grid-area: class;
+}
+
+.character-card__origin {
+	grid-area: origin;
+}
+
+.character-card__archetype {
+	grid-area: archetype;
+}
+
+.character-card__level {
+	grid-area: level;
+} */

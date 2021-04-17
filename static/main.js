@@ -104,11 +104,24 @@ function updateActiveLinks (url) {
 // INIT ROUTING ====================================================================================
 window.addEventListener('popstate', updateRouting)
 
+function closestAnchor (target) {
+	let node = target
+	while (node !== document.documentElement) {
+		if (node.nodeName === 'A') {
+			return node
+		}
+		node = node.parentElement
+	}
+	return null
+}
+
 document.addEventListener('click', evt => {
-	if (evt.target.matches('[data-link]')) {
+	const anchor = closestAnchor(evt.target)
+
+	if (anchor && anchor.matches('[data-link]')) {
 		evt.preventDefault()
 
-		const href = evt.target.getAttribute('href')
+		const href = anchor.getAttribute('href')
 		if (getCurrentUrl() !== href) {
 			pushRoute(href)
 		}

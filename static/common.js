@@ -18,3 +18,7 @@ export function html (htmlStr) {
 	template.innerHTML = htmlStr
 	return template.content
 }
+
+export function qs (queryStrPart, element = document) {
+		return element.querySelector(`[data-js="${queryStrPart}"]`)
+}
