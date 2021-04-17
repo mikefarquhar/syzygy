@@ -35,7 +35,12 @@ const characterTemplate = html`
 	<li class="characters-list__item">
 		<a data-js="link" data-link>
 			<div class="character-card">
-				<img class="character-card__portrait" data-js="portrait" alt="" />
+				<img
+					class="character-card__portrait"
+					data-js="portrait"
+					alt="character portrait"
+					src="./static/images/portrait-placeholder.svg"
+				/>
 				<span class="character-card__info">
 					<span class="character-card__name" data-js="name"></span>
 					<span class="character-card__class" data-js="class"></span>
@@ -72,10 +77,17 @@ export default class CharactersView extends AbstractView {
 
 				qs('link', card).href = `/character/${character.idx}`
 				qs('name', card).textContent = character.info.name || 'Unnamed character'
-				qs('class', card).textContent = `Class: ${character.info.class}`
+				qs('class', card).textContent = `Class: ${character.info.charClass}`
 				qs('origin', card).textContent = `Origin: ${character.info.origin}`
-				qs('archetype', card).textContent = `Archetype: ${character.info.archetype}`
 				qs('level', card).textContent = `Lv: ${character.info.level}`
+
+				if (character.info.portrait !== null) {
+					qs('portrait', card).href = character.info.portrait
+				}
+
+				if (character.info.archetype !== 'none') {
+					qs('archetype', card).textContent = `Archetype: ${character.info.archetype}`
+				}
 
 				charactersList.appendChild(card)
 			}
