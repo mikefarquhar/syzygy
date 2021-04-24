@@ -1,44 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="Syzygy TTRPG character sheet and dice roller">
-    <title>Syzygy</title>
-		<link rel="shortcut icon" href="favicon-16x16.png" type="image/png">
-		<link rel="stylesheet" href="style.css">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Syzygy</title>
+	<meta name="description" content="Syzygy TTRPG character sheet and dice roller">
+	<link rel="prefetch" href="./static/common.js" as="script">
+	<link rel="prefetch" href="./static/html-templating.js" as="script">
+	<link rel="prefetch" href="./static/character-api.js" as="script">
+	<link rel="shortcut icon" href="favicon-16x16.png" type="image/png">
+	<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-		<header class="page-header">
-			<a class="page-header__brand" href="/" data-link>SYZYGY</a>
+	<header class="page-header">
+		<a class="page-header__brand" href="/" data-link>SYZYGY</a>
 
-			<input
-				type="checkbox"
-				id="page-header__nav-toggle"
-				class="page-header__nav-toggle"
-				data-js="page-nav-toggle"
-			/>
-			<label
-				class="page-header__nav-toggle-label"
-				for="page-header__nav-toggle"
-				tabindex="0"
-				data-js="page-nav-toggle-label"
-				role="button"
-				aria-label="Menu"
-			>
-				<span class="page_header__hamburger"></span>
-			</label>
+		<input
+			type="checkbox"
+			id="page-header__nav-toggle"
+			class="page-header__nav-toggle"
+			data-js="page-nav-toggle"
+		/>
+		<label
+			class="page-header__nav-toggle-label"
+			for="page-header__nav-toggle"
+			tabindex="0"
+			data-js="page-nav-toggle-label"
+			role="button"
+			aria-label="Menu"
+		>
+			<span class="page_header__hamburger"></span>
+		</label>
 
-			<nav class="page-header__nav">
-				<a href="/" data-link>Characters</a>
-				<a href="/character/3" data-link>Character</a>
-				<a href="/cheese" data-link>Cheese?</a>
-			</nav>
-		</header>
+		<nav class="page-header__nav">
+			<a href="/" data-link>Characters</a>
+			<a href="/character/3" data-link>Character</a>
+			<a href="/cheese" data-link>Cheese?</a>
+		</nav>
+	</header>
 
-    <main class="view-body" data-js="router-root"></main>
+	<main class="view-body" data-js="router-root"></main>
 
-    <script src="./static/main.js" type="module"></script>
+	<script src="./static/main.js" type="module"></script>
 </body>
+
 </html>
