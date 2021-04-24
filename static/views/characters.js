@@ -1,100 +1,100 @@
-import { AbstractView, html, qs } from '../common.js'
+import { AbstractView, qs } from '../common.js'
 import { characterRepository } from '../character-api.js'
+import { html, render } from '../html-templating.js'
 import { pushRoute } from '../main.js'
 
-const viewContent = html`
-<div class="characters">
-	<h1 class="characters__header">Characters</h1>
-	<section class="characters__section characters__section--new">
-		<button
-			class="new-character__button"
-			data-js="new-character-button"
-			type="button"
-		>
-			+ New Character
-		</button>
-	</section>
-	<section class="characters__section">
-		<div
-			class="characters-empty-message"
-			data-js="empty-message"
-		>
-			Created characters will be displayed here.
-		</div>
-		<div
-			class="characters-container"
-			data-js="characters-container"
-		>
-
-		</div>
-	</section>
-</div>
-`
-
-const characterTemplate = html`
-	<li class="characters-list__item">
-		<a data-js="link" data-link>
-			<div class="character-card">
-				<img
-					class="character-card__portrait"
-					data-js="portrait"
-					alt="character portrait"
-					src="./static/images/portrait-placeholder.svg"
-				/>
-				<span class="character-card__info">
-					<span class="character-card__name" data-js="name"></span>
-					<span class="character-card__class" data-js="class"></span>
-					<span class="character-card__origin" data-js="origin"></span>
-					<span class="character-card__archetype" data-js="archetype"></span>
-					<span class="character-card__level" data-js="level"></span>
-				</span>
-			</div>
-		</a>
-	</li>
-`
+const PORTRAIT_PLACEHOLDER = './static/images/portrait-placeholder.svg'
 
 export default class CharactersView extends AbstractView {
+	constructor (rootEl, params) {
+		super(rootEl, params)
+		this.loadComplete = false
+		this.characters = []
+		this.newCharacterHandler = this.newCharacterHandler.bind(this)
+	}
+
 	async mount () {
-		const content = viewContent.cloneNode(true)
+		this.render()
+		this.characters = await characterRepository.listAll()
+		this.loadComplete = true
+		this.render()
+	}
 
-		qs('new-character-button', content)
-			.addEventListener('click', async () => {
-				const newId = await characterRepository.create()
-				pushRoute(`/character/${newId}`)
-			})
+	async newCharacterHandler () {
+		const newId = await characterRepository.create()
+		pushRoute(`/character/${newId}`)
+	}
 
-		const characters = await characterRepository.listAll()
-		if (characters.length === 0) {
-			qs('empty-message', content).style.setProperty('display', 'inline')
+	render () {
+		render(this.renderViewContent(), this.rootEl)
+	}
+
+	renderViewContent () {
+		return html`
+			<div class="characters">
+				<h1 class="characters__header">Characters</h1>
+				<section class="characters__section characters__section--new">
+					<button
+						class="new-character__button"
+						type="button"
+						onClick=${this.newCharacterHandler}
+					>
+						+ New Character
+					</button>
+				</section>
+				<section class="characters__section">
+					${this.renderCharacterSection()}
+				</section>
+			</div>
+		`
+	}
+
+	renderCharacterSection () {
+		if (this.loadComplete === false) {
+			return null
+		}
+		else if (this.characters.length === 0) {
+			return html`
+				<div class="characters-empty-message">
+					Created characters will be displayed here
+				</div>
+			`
 		}
 		else {
-			const charactersContainer = qs('characters-container', content)
-			const charactersList = document.createElement('ul')
-			charactersList.classList.add('characters-list')
-
-			for (const character of characters) {
-				const card = characterTemplate.cloneNode(true)
-
-				qs('link', card).href = `/character/${character.idx}`
-				qs('name', card).textContent = character.info.name || 'Unnamed character'
-				qs('class', card).textContent = `Class: ${character.info.charClass}`
-				qs('origin', card).textContent = `Origin: ${character.info.origin}`
-				qs('level', card).textContent = `Lv: ${character.info.level}`
-
-				if (character.info.portrait !== null) {
-					qs('portrait', card).href = character.info.portrait
-				}
-
-				if (character.info.archetype !== 'none') {
-					qs('archetype', card).textContent = `Archetype: ${character.info.archetype}`
-				}
-
-				charactersList.appendChild(card)
-			}
-
-			charactersContainer.appendChild(charactersList)
+			return html`
+				<ul class="characters-list">
+					${this.characters.map(character => html`
+						<li class="characters-list__item">
+							<a href="/character/${character.idx.toString()}" data-link>
+								<div class="character-card">
+									<img
+										class="character-card__portrait"
+										alt=""
+										src=${character.info.portrait || PORTRAIT_PLACEHOLDER}
+									/>
+									<span class="character-card__info">
+										<span class="character-card__name">
+											${character.info.name || 'Unnamed Character'}
+										</span>
+										<span class="character-card__class">
+											${character.info.charClass}
+										</span>
+										<span class="character-card__origin">
+											${character.info.origin}
+										</span>
+										<span class="character-card__archetype">
+											${character.info.archetype}
+										</span>
+										<span class="character-card__level">
+											${character.info.level.toString()}
+										</span>
+									</span>
+								</div>
+							</a>
+						</li>
+					`)}
+				</ul>
+			`
 		}
-
-		this.rootEl.appendChild(content)
 	}
 }

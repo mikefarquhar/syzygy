@@ -235,7 +235,7 @@ button:focus-visible {
 }
 
 .characters-empty-message {
-	display: none;
+	text-align: center;
 }
 
 .characters-list {
