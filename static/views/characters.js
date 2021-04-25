@@ -1,4 +1,4 @@
-import { AbstractView, qs } from '../common.js'
+import { AbstractView } from '../common.js'
 import { characterRepository } from '../character-api.js'
 import { html, render } from '../html-templating.js'
 import { pushRoute } from '../main.js'

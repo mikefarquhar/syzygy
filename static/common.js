@@ -10,7 +10,3 @@ export class AbstractView {
 
 	unmount () {}
 }
-
-export function qs (queryStrPart, element = document) {
-		return element.querySelector(`[data-js="${queryStrPart}"]`)
-}
