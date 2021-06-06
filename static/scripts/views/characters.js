@@ -22,7 +22,7 @@ export default class CharactersView extends AbstractView {
 
 	async newCharacterHandler () {
 		const newId = await characterRepository.create()
-		pushRoute(`/character/${newId}`)
+		pushRoute(`#/character/${newId}`)
 	}
 
 	render () {
@@ -65,7 +65,7 @@ export default class CharactersView extends AbstractView {
 				<ul class="characters-list">
 					${this.characters.map(character => html`
 						<li class="characters-list__item">
-							<a href="/character/${character.idx.toString()}" data-link>
+							<a href="#/character/${character.idx.toString()}" data-link>
 								<div class="character-card">
 									<img
 										class="character-card__portrait"

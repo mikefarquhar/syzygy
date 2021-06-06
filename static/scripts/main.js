@@ -2,8 +2,8 @@
 const rootElement = document.querySelector('[data-js=router-root]')
 
 const routeDefs = [
-	{ path: '/',              view: './views/characters.js' },
-	{ path: '/character/:id', view: './views/character.js' },
+	{ path: '#/',              view: './views/characters.js' },
+	{ path: '#/character/:id', view: './views/character.js' },
 ]
 
 const fallbackView = './views/not-found.js'
@@ -35,7 +35,7 @@ let activeParams = []
 let activeView = { unmount () {} }
 
 export async function updateRouting () {
-	const currentUrl = getCurrentUrl()
+	const currentUrl = window.location.hash
 
 	let nextRoute = fallbackRoute
 	let match = []
@@ -73,12 +73,8 @@ export async function updateRouting () {
 }
 
 export function pushRoute (url) {
-	window.history.pushState(null, document.title, `#${url}`)
+	window.history.pushState(null, document.title, url)
 	updateRouting()
-}
-
-function getCurrentUrl() {
-	return window.location.hash.slice(1) || '/'
 }
 
 function paramsAreEqual (currentParams, nextParams) {
@@ -122,7 +118,7 @@ document.addEventListener('click', evt => {
 		evt.preventDefault()
 
 		const href = anchor.getAttribute('href')
-		if (getCurrentUrl() !== href) {
+		if (window.location.hash !== href) {
 			pushRoute(href)
 		}
 	}
